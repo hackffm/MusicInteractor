@@ -2,6 +2,7 @@
 
 ## Directory structure
 
+```
 .
 ├── documentation
 │   └── pictures
@@ -10,3 +11,4 @@
     ├── dingding_accoustic_device
     │   └── hardware
     └── tof_input_device
+```
