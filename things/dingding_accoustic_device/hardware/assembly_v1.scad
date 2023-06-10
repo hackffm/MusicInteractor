@@ -1,5 +1,7 @@
 include <dingding_ring_pillar.scad>
 
+include <bar.scad>
+
 translate([0,0,150/2]) ring();
 
 translate([0,0,-150/2]) ring();
@@ -15,6 +17,8 @@ outer_radius = 160;
 for(i=[1:24])
 {
     rotate([0,0,(360/24)*i]) translate([outer_radius - bar_pillar_slot_dist - 5,0,0]) pillarGroup();
+    
+    rotate([0,0,(360/24)*i]) translate([outer_radius + 10,0,0]) bar(100+(5*i));
 }
 
 module ring()
