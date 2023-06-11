@@ -12,7 +12,7 @@ translate([0,0,-((150/2)-10)]) rotate([0,180,0]) bearingAssembly();
 
 bar_pillar_slot_dist = 5;
 
-outer_radius = 160;
+outer_radius = 120;
 
 for(i=[1:24])
 {

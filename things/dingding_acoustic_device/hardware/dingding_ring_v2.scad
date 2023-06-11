@@ -5,7 +5,7 @@ bar_pillar_slot_dist = 5;
 
 bearing_hole_radius = 53/2;
 
-outer_radius = 160;
+outer_radius = 120;
 
 
 bearing_diameter = 58.4;
@@ -40,7 +40,7 @@ difference()
     {
         rotate([0,0,(360/6)*i]) translate([(outer_radius - bearing_hole_radius/2)/2+bearing_hole_radius,0,0]) circle($fn = 32, r=4);
         
-        rotate([0,0,((360/6)*i)+360/12]) translate([(outer_radius - bearing_hole_radius/2)/2+bearing_hole_radius,0,0]) square([4,30],center = true);
+        rotate([0,0,((360/6)*i)+360/12]) translate([(outer_radius - bearing_hole_radius/2)/2+bearing_hole_radius,0,0]) square([3,30],center = true);
     }
     
     // screw holes
@@ -56,8 +56,8 @@ difference()
 
 
 module blockSlot() {
-    translate([0,2+5,0]) square([10,4], center=true);
-    translate([0,-(2+5),0]) square([10,4], center=true);
+    translate([0,2+5,0]) square([10,3], center=true);
+    translate([0,-(2+5),0]) square([10,3], center=true);
 }
 
 module slot(length, width_diameter)
