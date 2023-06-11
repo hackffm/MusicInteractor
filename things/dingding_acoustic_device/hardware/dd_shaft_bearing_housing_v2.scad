@@ -2,7 +2,7 @@ $fa = 1;
 bearing_height = 7;
 bearing_diameter = 58.4;
 
-beargin_608ZZ_diamter = 22; // 8x22x7
+beargin_608ZZ_diamter = 22.4; // 8x22x7
 
 beargin_608ZZ_radius = beargin_608ZZ_diamter/2;
 

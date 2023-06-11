@@ -18,7 +18,11 @@ for(i=[1:24])
 {
     rotate([0,0,(360/24)*i]) translate([outer_radius - bar_pillar_slot_dist - 5,0,0]) pillarGroup();
     
-    rotate([0,0,(360/24)*i]) translate([outer_radius + 10,0,0]) bar(100+(5*i));
+    // bar sizes
+    // min 78mm
+    // max 155
+    // width 25mm
+    rotate([0,0,(360/24)*i]) translate([outer_radius + 10,0,0]) bar(78+(3.2*i));
 }
 
 module ring()

@@ -31,7 +31,7 @@ difference()
 
     for(i = [1 : bars])
     {
-        rotate([0,0, (360/bars)*i]) translate([outer_radius - bar_pillar_slot_dist - 10,0,0]) blockSlot();
+        rotate([0,0, (360/bars)*i]) translate([outer_radius - bar_pillar_slot_dist - 5,0,0]) blockSlot();
         
         rotate([0,0, (360/bars)*i]) translate([outer_radius - bar_pillar_slot_dist-25,0,0]) slot(10, 3);
     }
@@ -56,16 +56,18 @@ difference()
 
 
 module blockSlot() {
-    translate([0,2+5,0]) square([15,4], center=true);
-    translate([0,-(2+5),0]) square([15,4], center=true);
+    translate([0,2+5,0]) square([10,4], center=true);
+    translate([0,-(2+5),0]) square([10,4], center=true);
 }
 
 module slot(length, width_diameter)
 {
+    /*
     hull()
     {
         translate([-length,0,0]) circle($fn=32, r= width_diameter/2);
         translate([0,0,0]) circle($fn=32, r= width_diameter/2);
     }
+    */
 }
 
