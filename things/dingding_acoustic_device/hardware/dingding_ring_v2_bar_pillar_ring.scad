@@ -23,7 +23,7 @@ difference()
         difference()
         {
             circle($fn=360, r=outer_radius);
-            circle($fn=360, r=bearing_hole_radius);
+            circle($fn=360, r=outer_radius-25);
             // translate([0,0,-1]) cylinder($fn=360, h=22, r=150);
         }
         
@@ -36,19 +36,7 @@ difference()
         rotate([0,0, (360/bars)*i]) translate([outer_radius - bar_pillar_slot_dist-25,0,0]) slot(10, 3);
     }
     
-    rotate([0,0,0]) for(i = [1 : 6])
-    {
-        rotate([0,0,(360/6)*i]) translate([(outer_radius - bearing_hole_radius/2)/2+bearing_hole_radius,0,0]) circle($fn = 32, r=4);
-        
-        rotate([0,0,((360/6)*i)+360/12]) translate([(outer_radius - bearing_hole_radius/2)/2+bearing_hole_radius,0,0]) square([3,30],center = true);
-    }
     
-    // screw holes
-    
-    for(rz = [0: 45 : 360])
-    {
-        rotate([0,0,rz]) translate([bearing_radius+(mount_width / 2),0,0]) circle($fn=32, r = mount_screwhole_radius );
-    }
     
     for(rz = [0: 45 : 360])
     {
@@ -61,8 +49,8 @@ difference()
 
 
 module blockSlot() {
-    translate([5,2+5,0]) square([20,3], center=true);
-    translate([5,-(2+5),0]) square([20,3], center=true);
+    translate([0,2+5,0]) square([10,3], center=true);
+    translate([0,-(2+5),0]) square([10,3], center=true);
 }
 
 module slot(length, width_diameter)

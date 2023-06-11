@@ -1,5 +1,7 @@
 include <dingding_ring_pillar.scad>
 
+include <solenoid_mount.scad>
+
 include <bar.scad>
 
 translate([0,0,150/2]) ring();
@@ -22,7 +24,9 @@ for(i=[1:24])
     // min 78mm
     // max 155
     // width 25mm
-    rotate([0,0,(360/24)*i]) translate([outer_radius + 10,0,0]) bar(78+(3.2*i));
+    rotate([0,0,(360/24)*i]) translate([outer_radius + (23-2.5),0,0]) bar(78+(3.2*i));
+    
+    rotate([0,0,(360/24)*i]) translate([163,0,0]) rotate([180,0,0]) solenoid();
 }
 
 module ring()
@@ -49,4 +53,9 @@ module bearingAssembly()
 module bearingClamp()
 {
     // include <dd_shaft_bearing_clamp_outer.scad>
+}
+
+module solenoid()
+{
+    include <solenoid.scad>
 }
