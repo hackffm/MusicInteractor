@@ -23,7 +23,7 @@ difference()
     
     for(i=[1:24])
     {
-        rotate([0,0,(360/solenoid_count_total)*i]) translate([155,0,0]) solenoid_mount_hole_slot(solenoid_mount_holes_dist);
+        rotate([0,0,(360/solenoid_count_total)*i]) translate([155,0,0]) solenoid_pcb_hole();
     }
     
     rotate([0,0,((360/24)/2)*3]) for(i=[0:45:360])
@@ -39,13 +39,10 @@ module pillarMounting()
     square([10,3], center = true);
 }
 
-module solenoid_mount_hole_slot(slot_length)
+module solenoid_pcb_hole()
 {
-    hull() 
-    {
-        circle($fn =16, r = 2.5/2);
-        translate([slot_length,0]) circle($fn =16, r = 2.5/2);
-    }
+    translate([0,-5,0]) circle($fn =16, r = 0.5);
+    translate([0,5,0]) circle($fn =16, r = 0.5);
 }
 
 
