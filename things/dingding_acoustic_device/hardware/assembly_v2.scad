@@ -26,7 +26,7 @@ for(i=[1:24])
     // width 25mm
     rotate([0,0,(360/24)*i]) translate([outer_radius + (23-2.5),0,0]) bar(78+(3.2*i));
     
-    rotate([0,0,(360/24)*i]) translate([163,0,0]) rotate([180,0,0]) solenoid();
+    %rotate([0,0,(360/24)*i]) translate([163,0,0]) rotate([180,0,0]) solenoid();
 }
 
 module ring()

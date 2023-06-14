@@ -5,15 +5,15 @@ bar_top_dist_to_ring_outer = 23;
 
 solenoid_tip_to_first_mount_hole = 16;
 
-solenoid_mount_holes_dist = 17;
+solenoid_mount_holes_dist = 35;
 
 solenoid_swing_dist = 8;
 
-solenoid_solenoid_spacing = 3;
+solenoid_solenoid_spacing = 5;
 
 solenoid_holder_ring = ring_outer_radius+bar_top_dist_to_ring_outer+solenoid_solenoid_spacing;
 
-holder_widht = 70;
+holder_widht = 55;
 
 difference() 
 {
@@ -22,7 +22,7 @@ difference()
     
     for(i=[1:24])
     {
-        rotate([0,0,(360/24)*i]) translate([155,0,0]) solenoid_mount_hole_slot(solenoid_mount_holes_dist);
+        rotate([0,0,(360/24)*i]) translate([solenoid_holder_ring+5,0,0]) solenoid_mount_hole_slot(solenoid_mount_holes_dist);
     }
 }
 

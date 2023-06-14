@@ -50,6 +50,10 @@ difference()
         rotate([0,0,rz]) translate([bearing_radius+(mount_width / 2),0,0]) circle($fn=32, r = mount_screwhole_radius );
     }
     
+    mounting_screw_hole = bearing_radius+(mount_width / 2);
+    
+    echo("bearing_radius+(mount_width / 2)", mounting_screw_hole); 
+    
     for(rz = [0: 45 : 360])
     {
         rotate([0,0,rz]) translate([outer_radius-20,0,0]) circle($fn=16, r = 1 );
