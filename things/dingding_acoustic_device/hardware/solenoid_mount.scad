@@ -18,7 +18,16 @@ holder_widht = 50;
 
 difference() 
 {
-    circle($fa = 1, r=solenoid_holder_ring+holder_widht);
+    union()
+    {
+        circle($fa = 1, r=solenoid_holder_ring+holder_widht);
+    
+        rotate([0,0,((360/24)/2)*0]) for(i=[0:45:360])
+        {
+            rotate([0,0,i]) translate([solenoid_holder_ring+holder_widht,0,0]) circle($fn=32, r=16);
+        }
+    }
+    
     circle($fa = 1, r=solenoid_holder_ring);
     
     for(i=[1:24])
@@ -29,6 +38,11 @@ difference()
     rotate([0,0,((360/24)/2)*3]) for(i=[0:45:360])
     {
         rotate([0,0,i]) translate([170,0,0]) pillarMounting();
+    }
+    
+    rotate([0,0,((360/24)/2)*0]) for(i=[0:45:360])
+    {
+        rotate([0,0,i]) translate([solenoid_holder_ring+holder_widht,0,0]) circle($fn=32, r=4);
     }
 }
 
