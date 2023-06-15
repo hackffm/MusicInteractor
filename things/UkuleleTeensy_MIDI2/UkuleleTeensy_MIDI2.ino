@@ -41,7 +41,7 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 #define multiplierBund 1
 
 
-const int mchannel = 1; 
+const int mchannel = 7; 
 const float freq1[maxbund+1] = {NOTE_G3, NOTE_G3, NOTE_Gs3, NOTE_A3, NOTE_As3, NOTE_B3, NOTE_C4, NOTE_Cs4, NOTE_D4, NOTE_Ds4, NOTE_E4};
 const float freq2[maxbund+1] = {NOTE_C3, NOTE_C3, NOTE_Cs3, NOTE_D3, NOTE_Ds3, NOTE_E3, NOTE_F3, NOTE_Fs3, NOTE_G3, NOTE_Gs3, NOTE_A3};
 const float freq3[maxbund+1] = {NOTE_E3, NOTE_E3, NOTE_F3, NOTE_Fs3, NOTE_G3, NOTE_Gs3, NOTE_A3, NOTE_As3, NOTE_B3, NOTE_C4, NOTE_Cs4};
