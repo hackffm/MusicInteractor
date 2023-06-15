@@ -29,9 +29,9 @@ void setup() {
     digitalWrite(stepRxPin, LOW); 
 
 
-  stepper.setMaxSpeed(10000);
-  stepper.setAcceleration(20000);
-  stepper.moveTo(60000);
+  stepper.setMaxSpeed(40000);
+  stepper.setAcceleration(120000);
+  stepper.moveTo(20000);
   
 }
 
