@@ -8,7 +8,7 @@
 #include <AccelStepper.h>
 
 // must have both same amount of entries
-const byte solenoids[] =      { 36, 37, 38, 35, 34 };
+const byte solenoids[] =      { 36, 37, 38, 34, 35 };
 const byte solenoid_notes[] = { 48, 50, 51, 52, 55 };
 
 uint8_t solenoid_count = sizeof(solenoids)/sizeof(solenoids[0]);
@@ -18,7 +18,7 @@ uint16_t solenoid_maxtime[sizeof(solenoids)/sizeof(solenoids[0])];
 
 #define DO_DEBUGPRINTS  1
 
-#define MAX_ONTIME 1000
+#define MAX_ONTIME 20
 
 // stepper driver pin definitions
 #define STEPPER_PIN_ENABLE  32
@@ -33,9 +33,18 @@ uint16_t solenoid_maxtime[sizeof(solenoids)/sizeof(solenoids[0])];
 // stepper constants and variables
 
 // the stepper notes positions is initialized with zeros
-long stepper_notes_position[] = { 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L };
+long stepper_notes_position[] = { 0L, 2000L, 4000L, 6000L, 8000L, 10000L, 12000L, 14000L, 16000L, 18000L, 20000L, 22000L, 24000L, 26000L, 28000L, 30000L, 32000L, 34000L, 36000L, 38000L, 40000L, 42000L, 44000L, 46000L };
 const byte stepper_notes[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 };
 
+// position sensor
+#define SENSOR_POSITION_A A1
+#define SENSOR_POSITION_B A2
+
+long rotationZero = 0L;
+long totalRotation = 0L;
+
+long offsetRotation = 0L;
+long segmentRotation = 0L;
 
 AccelStepper stepper(1, STEPPER_PIN_STEP, STEPPER_PIN_DIR); // pin 3 = step, pin 6 = direction
 
@@ -63,7 +72,7 @@ int8_t get_solenoid_index(byte pitch) {
 void noteOn(byte channel, byte pitch, byte velocity) {
   int8_t solenoid_index = -2;
   solenoid_index = get_solenoid_index(pitch);
-  if(solenoid_index >= 0) {
+  if(solenoid_index >= 0 && !stepper.isRunning()) {
     solenoid_ontime[solenoid_index] = millis();
     digitalWrite(solenoids[solenoid_index], HIGH);
     solenoid_maxtime[solenoid_index] = MAX_ONTIME;
@@ -72,6 +81,14 @@ void noteOn(byte channel, byte pitch, byte velocity) {
     Serial.print("Solenoid port ON:");
     Serial.println(solenoids[solenoid_index]);
     #endif
+  }
+
+  if(pitch>=0 && pitch<=23)
+  {
+    Serial.print("Move to:");
+    Serial.println(pitch);
+
+    stepper.moveTo(stepper_notes_position[pitch]);
   }
   
 #ifdef DO_DEBUGPRINTS
@@ -123,25 +140,29 @@ void controlChange(byte channel, byte control, byte value) {
 }
 
 void setupStepperDriver() {
-    pinMode(STEPPER_PIN_ENABLE, OUTPUT);
-    pinMode(STEPPER_PIN_MS1, OUTPUT);
-    pinMode(STEPPER_PIN_MS2, OUTPUT);
-    pinMode(STEPPER_PIN_SPREAD, OUTPUT);
-    pinMode(STEPPER_PIN_PDN_UART1, OUTPUT);
-    pinMode(STEPPER_PIN_PDN_UART2, OUTPUT);
-    pinMode(STEPPER_PIN_STEP, OUTPUT);
-    pinMode(STEPPER_PIN_DIR, OUTPUT);
+  pinMode(STEPPER_PIN_ENABLE, OUTPUT);
+  pinMode(STEPPER_PIN_MS1, OUTPUT);
+  pinMode(STEPPER_PIN_MS2, OUTPUT);
+  pinMode(STEPPER_PIN_SPREAD, OUTPUT);
+  pinMode(STEPPER_PIN_PDN_UART1, OUTPUT);
+  pinMode(STEPPER_PIN_PDN_UART2, OUTPUT);
+  pinMode(STEPPER_PIN_STEP, OUTPUT);
+  pinMode(STEPPER_PIN_DIR, OUTPUT);
 
-    // set micro step settings
-    // for more detail see manual at https://learn.watterott.com/silentstepstick/pinconfig/tmc2209/
-    digitalWrite(STEPPER_PIN_MS1, LOW); 
-    digitalWrite(STEPPER_PIN_MS2, HIGH); 
-    digitalWrite(STEPPER_PIN_SPREAD, LOW); 
+  // set micro step settings
+  // for more detail see manual at https://learn.watterott.com/silentstepstick/pinconfig/tmc2209/
+  digitalWrite(STEPPER_PIN_MS1, LOW); 
+  digitalWrite(STEPPER_PIN_MS2, HIGH); 
+  digitalWrite(STEPPER_PIN_SPREAD, LOW); 
 
 
-    stepper.setMaxSpeed(10000);
-    stepper.setAcceleration(20000);
-    stepper.moveTo(60000);
+  stepper.setMaxSpeed(40000);
+  stepper.setAcceleration(120000);
+  stepper.moveTo(20000);
+
+  for(uint8_t i=0; i<24; i++) {
+    stepper_notes_position[i] = 9000*i;
+  }
 }
 
 void setup() {
@@ -156,13 +177,16 @@ void setup() {
   // setup stepper driver
   setupStepperDriver();
 
+  // calibrate positions of bars
+  stepperPositionCalibration();
+
   // Test all Solenoids
   delay(1000);
   for(uint8_t i = 0; i<solenoid_count; i++) {
     digitalWrite(solenoids[i], HIGH);
-    delay(250);
+    delay(20);
     digitalWrite(solenoids[i], LOW);
-    delay(50);
+    delay(200);
   }
 }
 
@@ -228,9 +252,117 @@ void loop() {
       Serial.println(rx.byte3, HEX);
       #endif
   }
+
+  stepper.run();
+}
+
+bool positionSensorA() {
+  int sensorValue = analogRead(SENSOR_POSITION_A);
+  bool sensorIs = false;
+  if(sensorValue>500) {
+    sensorIs = true;
+  }
+
+  if(sensorValue<200) {
+    sensorIs = false;
+  }
+
+  return sensorIs;
+}
+
+bool positionSensorB() {
+  int sensorValue = analogRead(SENSOR_POSITION_B);
+  bool sensorIs = false;
+  if(sensorValue>500) {
+    sensorIs = true;
+  }
+
+  if(sensorValue<200) {
+    sensorIs = false;
+  }
+
+  return sensorIs;
 }
 
 
 void stepperPositionCalibration() {
-    
+  // search for position zero
+  // stepper_notes_position   
+
+  stepper.setMaxSpeed(8000);
+  stepper.setAcceleration(5000);
+  
+  bool searchPosition = true;
+  bool previewsSensorValue = positionSensorA();
+
+  // back off if sensor A over black bar
+  if(previewsSensorValue==true) {
+    stepper.moveTo(stepper.currentPosition()-10000L);
+  
+    while(stepper.isRunning()) {
+      stepper.run();
+    }
+  }
+
+  previewsSensorValue = positionSensorA();
+
+  stepper.setSpeed(8000);
+
+  Serial.print("previewsSensorValue ");
+  Serial.println(previewsSensorValue);
+  long sensorStart = 0L;
+  long rotationZero = 0L;
+  sensorStart = stepper.currentPosition();
+  Serial.print("Search start Position: ");
+  Serial.println(sensorStart);
+  while(searchPosition) {
+    stepper.runSpeed();
+    if(previewsSensorValue!=positionSensorA())
+    {
+      searchPosition = false;
+      rotationZero = stepper.currentPosition();
+      stepper.setSpeed(0);
+    }
+  }
+  Serial.print("rotationZero: ");
+  Serial.println(rotationZero);
+
+  // start meassure steps for 360 degree rotation
+  stepper.moveTo(stepper.currentPosition()+10000L);
+  while(stepper.isRunning()) {
+    stepper.run();
+  }
+
+  searchPosition = true;
+
+  previewsSensorValue = positionSensorA();
+  stepper.setSpeed(8000);
+  while(searchPosition) {
+    stepper.runSpeed();
+    if(previewsSensorValue!=positionSensorA())
+    {
+      searchPosition = false;
+      totalRotation = stepper.currentPosition()-rotationZero;
+      stepper.setSpeed(0);
+    }
+  }
+
+  Serial.print("totalRotation: ");
+  Serial.println(totalRotation);
+
+  offsetRotation = 1800L;
+  segmentRotation = totalRotation/24L;
+
+  long startPos = (rotationZero-1900L) + (segmentRotation * 2);
+
+  for(byte i = 0; i<24; i++) 
+  {
+    stepper_notes_position[i] = startPos-(segmentRotation * i);
+  }
+
+  stepper.moveTo(stepper_notes_position[0]);
+
+  stepper.setMaxSpeed(40000);
+  stepper.setAcceleration(120000);
+
 }
