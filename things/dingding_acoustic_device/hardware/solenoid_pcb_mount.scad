@@ -54,8 +54,8 @@ module pillarMounting()
 
 module solenoid_pcb_hole()
 {
-    translate([0,-5,0]) circle($fn =16, r = 0.5);
-    translate([0,5,0]) circle($fn =16, r = 0.5);
+    translate([0,-13.5/2,0]) circle($fn =16, r = 0.5);
+    translate([0,13.5/2,0]) circle($fn =16, r = 0.5);
 }
 
 

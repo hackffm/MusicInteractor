@@ -57,8 +57,8 @@ module solenoid_mount_hole_slot(slot_length)
 {
     hull() 
     {
-        circle($fn =16, r = 2.5/2);
-        translate([slot_length,0]) circle($fn =16, r = 2.5/2);
+        circle($fn =16, r = 3/2);
+        translate([slot_length,0]) circle($fn =16, r = 3/2);
     }
 }
 
