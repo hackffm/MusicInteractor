@@ -8,8 +8,8 @@
 #include <AccelStepper.h>
 
 // must have both same amount of entries
-const byte solenoids[] =      { 36, 37, 38, 34, 35 };
-const byte solenoid_notes[] = { 48, 50, 51, 52, 55 };
+const byte solenoids[] =      { 36, 37, 38, 34, 35, 33 };
+const byte solenoid_notes[] = { 48, 50, 51, 52, 55, 60 };
 
 uint8_t solenoid_count = sizeof(solenoids)/sizeof(solenoids[0]);
 
@@ -37,8 +37,8 @@ long stepper_notes_position[] = { 0L, 2000L, 4000L, 6000L, 8000L, 10000L, 12000L
 const byte stepper_notes[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 };
 
 // position sensor
-#define SENSOR_POSITION_A A1
-#define SENSOR_POSITION_B A2
+#define SENSOR_POSITION_A A2
+#define SENSOR_POSITION_B A1
 
 long rotationZero = 0L;
 long totalRotation = 0L;
@@ -72,7 +72,9 @@ int8_t get_solenoid_index(byte pitch) {
 void noteOn(byte channel, byte pitch, byte velocity) {
   int8_t solenoid_index = -2;
   solenoid_index = get_solenoid_index(pitch);
-  if(solenoid_index >= 0 && !stepper.isRunning()) {
+  // if(solenoid_index >= 0 && !stepper.isRunning()) {
+  if(solenoid_index >= 0 && positionSensorB()) {
+    
     solenoid_ontime[solenoid_index] = millis();
     digitalWrite(solenoids[solenoid_index], HIGH);
     solenoid_maxtime[solenoid_index] = MAX_ONTIME;
@@ -350,10 +352,10 @@ void stepperPositionCalibration() {
   Serial.print("totalRotation: ");
   Serial.println(totalRotation);
 
-  offsetRotation = 1800L;
+  offsetRotation = -350L;
   segmentRotation = totalRotation/24L;
 
-  long startPos = (rotationZero-1900L) + (segmentRotation * 2);
+  long startPos = (rotationZero-offsetRotation) + (segmentRotation * 2);
 
   for(byte i = 0; i<24; i++) 
   {
