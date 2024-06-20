@@ -7,7 +7,7 @@ difference(){
     
     translate([200/2,-10]) text("dingDing", font = "Ruler Stencil:style=Regular" , size=30, halign="center", valign="top", spacing=0.9);
     
-    translate([35,-55]) text("MK-1", font = "Ruler Stencil:style=Bold" , size=10, halign="left", valign="top", spacing=1);
+    translate([35,-55]) text("MK-ll", font = "Ruler Stencil:style=Bold" , size=10, halign="left", valign="top", spacing=1);
     
     translate([30,-90]) rotate([0,180,90]) pcbBigHoles();
     translate([150,-85]) pcbSlimHoles();
@@ -19,6 +19,18 @@ difference(){
     
     translate([10,-100]) circle(r=2.2);
     translate([200-10,-100]) circle(r=2.2);
+    
+    makeHoles(radius=10, fn=8, [[20,-30],[30,-40]]);
+}
+
+module makeHoles(radius=1, fn=8, positions=[[30,-40]])
+{
+    echo(len(positions));
+    for(i=[0:1:len(positions)-1])
+    {
+        echo(positions[i]);
+        translate(positions[i]) circle($fn=fn, r=radius);
+    }
 }
 
 module roundedRect(radius, width, height)
